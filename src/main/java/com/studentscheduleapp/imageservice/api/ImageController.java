@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("api/")
@@ -38,13 +39,14 @@ public class ImageController {
     @GetMapping("{name}")
     public ResponseEntity<Byte[]> download(@PathVariable("name") String name){
         File f = fileService.get(name);
-        if(f != null){
+        if(f.exists()){
             try {
                 byte[] bs = FileUtils.readFileToByteArray(f);
                 Byte[] Bs = new Byte[bs.length];
                 for (int i = 0; i < bs.length; i++){
                     Bs[i] = bs[i];
                 }
+                return ResponseEntity.ok(Bs);
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
