@@ -24,7 +24,7 @@ public class FileService {
     }
 
     public String create(MultipartFile file) throws IOException {
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             try {
                 if(!new File(root).exists())
                     new File(root).mkdir();

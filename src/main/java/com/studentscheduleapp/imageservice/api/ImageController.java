@@ -3,6 +3,7 @@ package com.studentscheduleapp.imageservice.api;
 import com.studentscheduleapp.imageservice.services.FileService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +23,13 @@ public class ImageController {
 
     @PostMapping("upload")
     public ResponseEntity<String> upload(@RequestParam("image") MultipartFile file) {
+        if (file == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         String url = "";
         try {
             url = fileService.create(file);
-        } catch (IOException e){
-
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(url);
