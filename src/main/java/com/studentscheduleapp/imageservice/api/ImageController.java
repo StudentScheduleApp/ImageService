@@ -30,7 +30,6 @@ public class ImageController {
         try {
             url = fileService.create(file);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(url);
@@ -38,8 +37,13 @@ public class ImageController {
 
     @GetMapping("{name}")
     public ResponseEntity<Byte[]> download(@PathVariable("name") String name){
-        File f = fileService.get(name);
-        if(f.exists()){
+        File f = null;
+        try {
+            f = fileService.get(name);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        if(f != null){
             try {
                 byte[] bs = FileUtils.readFileToByteArray(f);
                 Byte[] Bs = new Byte[bs.length];
@@ -56,7 +60,11 @@ public class ImageController {
 
     @DeleteMapping("{name}")
     public ResponseEntity<Void> delete(@PathVariable("name") String name){
-        fileService.delete(name);
+        try {
+            fileService.delete(name);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
         return ResponseEntity.ok().build();
     }
 
