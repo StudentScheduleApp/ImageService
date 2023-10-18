@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 @Service
-public class FileService {
+public class ImageService {
 
 
     @Value("${file.path}")

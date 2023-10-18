@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import java.io.*;
 
 @Repository
@@ -22,7 +23,7 @@ public class ImageRepository {
     }
 
     public String create(MultipartFile file) throws IOException {
-        if (file != null && !file.isEmpty()) {
+        if (file != null && !file.isEmpty() && ImageIO.read(file.getInputStream()) != null) {
             try {
                 if(!new File(root).exists())
                     new File(root).mkdir();
@@ -48,7 +49,7 @@ public class ImageRepository {
                 throw new IOException(e);
             }
         } else {
-            throw new IOException();
+            throw new NullPointerException();
         }
     }
     public void delete(String name) throws IOException {
