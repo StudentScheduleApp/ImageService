@@ -10,6 +10,7 @@ import com.google.api.client.http.FileContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.Value;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
@@ -30,11 +31,11 @@ import java.util.List;
 public class GoogleDriveRepo {
     private static final String APPLICATION_NAME = "StudentScheduleApp";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static final String TOKENS_DIRECTORY_PATH = "tokens";
-    private static final List<String> SCOPES =
-            Collections.singletonList(DriveScopes.DRIVE_METADATA_READONLY);
+    @Value("${google.drive.token.path}")
+    private String TOKENS_DIRECTORY_PATH;
+    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_METADATA_READONLY);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
-    private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
+    private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
         InputStream in = GoogleDriveRepo.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
