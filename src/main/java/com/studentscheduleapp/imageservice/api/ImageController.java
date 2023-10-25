@@ -1,7 +1,5 @@
 package com.studentscheduleapp.imageservice.api;
 
-import com.studentscheduleapp.imageservice.models.api.*;
-import com.studentscheduleapp.imageservice.services.AuthorizeUserService;
 import com.studentscheduleapp.imageservice.services.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
@@ -13,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 
 @RestController
 @RequestMapping("api/")
@@ -22,17 +19,9 @@ public class ImageController {
 
     @Autowired
     private ImageService imageService;
-    @Autowired
-    private AuthorizeUserService authorizeUserService;
 
     @PostMapping("upload")
-    public ResponseEntity<String> upload(@RequestParam("image") MultipartFile file, @RequestBody AuthUserCreds authUserCreds) {
-        try {
-            if(!authorizeUserService.authorize(new AuthorizeUserRequest(authUserCreds.getToken(), Collections.singletonList(new AuthorizeEntity(AuthorizeType.CREATE, Collections.singletonList(authUserCreds.getGroupId()), Entity.IMAGE, null)))))
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public ResponseEntity<String> upload(@RequestParam("image") MultipartFile file, @RequestParam("driveEmail") String driveEmail) {
         if (file == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         String url = "";
@@ -47,7 +36,7 @@ public class ImageController {
     }
 
     @GetMapping("{name}")
-    public ResponseEntity<Byte[]> download(@PathVariable("name") String name){
+    public ResponseEntity<Byte[]> download(@PathVariable("name") String name, @RequestParam("driveEmail") String driveEmail){
         File f = null;
         try {
             f = imageService.get(name);
@@ -70,13 +59,7 @@ public class ImageController {
     }
 
     @DeleteMapping("{name}")
-    public ResponseEntity<Void> delete(@PathVariable("name") String name, @RequestBody AuthUserCreds authUserCreds) {
-        try {
-            if(!authorizeUserService.authorize(new AuthorizeUserRequest(authUserCreds.getToken(), Collections.singletonList(new AuthorizeEntity(AuthorizeType.DELETE, Collections.singletonList(authUserCreds.getGroupId()), Entity.IMAGE, null)))))
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public ResponseEntity<Void> delete(@PathVariable("name") String name, @RequestParam("driveEmail") String driveEmail){
         try {
             imageService.delete(name);
         } catch (IOException e) {
