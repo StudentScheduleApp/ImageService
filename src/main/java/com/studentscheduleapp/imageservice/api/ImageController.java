@@ -67,5 +67,14 @@ public class ImageController {
         }
         return ResponseEntity.ok().build();
     }
+    @PostMapping("{name}")
+    public ResponseEntity<Void> addEmail(@PathVariable("name") String name){
+
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping("{name}")
+    public ResponseEntity<Void> deleteEmail(@PathVariable("name") String name){
+        return ResponseEntity.ok().build();
+    }
 
 }
