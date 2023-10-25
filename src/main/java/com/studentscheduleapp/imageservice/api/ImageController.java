@@ -72,7 +72,7 @@ public class ImageController {
     @DeleteMapping("{name}")
     public ResponseEntity<Void> delete(@PathVariable("name") String name, @RequestBody AuthUserCreds authUserCreds) {
         try {
-            if(!authorizeUserService.authorize(new AuthorizeUserRequest(authUserCreds.getToken(), Collections.singletonList(new AuthorizeEntity(AuthorizeType.CREATE, Collections.singletonList(authUserCreds.getGroupId()), Entity.IMAGE, null)))))
+            if(!authorizeUserService.authorize(new AuthorizeUserRequest(authUserCreds.getToken(), Collections.singletonList(new AuthorizeEntity(AuthorizeType.DELETE, Collections.singletonList(authUserCreds.getGroupId()), Entity.IMAGE, null)))))
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             throw new RuntimeException(e);
