@@ -32,8 +32,8 @@ public class GoogleDriveRepo {
     private static final String APPLICATION_NAME = "StudentScheduleApp";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     @Value("${google.drive.token.path}")
-    private String TOKENS_DIRECTORY_PATH;
-    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_METADATA_READONLY);
+    private String TOKENS_DIRECTORY_PATH = "tokens";
+    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
     private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
@@ -63,13 +63,14 @@ public class GoogleDriveRepo {
 
             file.setParents(Collections.EMPTY_LIST);
 
-            FileContent mediaContent = new FileContent("jpg", fileContent);
+            FileContent mediaContent = new FileContent("image/jpeg", fileContent);
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                     .setApplicationName(APPLICATION_NAME)
                     .build();
             return service.files().create(file, mediaContent).setFields("id").execute().getId();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
