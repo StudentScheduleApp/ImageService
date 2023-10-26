@@ -21,7 +21,7 @@ public class ImageController {
     private ImageService imageService;
 
     @PostMapping("upload")
-    public ResponseEntity<String> upload(@RequestParam("image") MultipartFile file, @RequestParam("driveEmail") String driveEmail) {
+    public ResponseEntity<String> upload(@RequestParam("image") MultipartFile file) {
         if (file == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         String url = "";
@@ -36,7 +36,7 @@ public class ImageController {
     }
 
     @GetMapping("{name}")
-    public ResponseEntity<Byte[]> download(@PathVariable("name") String name, @RequestParam("driveEmail") String driveEmail){
+    public ResponseEntity<Byte[]> download(@PathVariable("name") String name){
         File f = null;
         try {
             f = imageService.get(name);
@@ -59,21 +59,12 @@ public class ImageController {
     }
 
     @DeleteMapping("{name}")
-    public ResponseEntity<Void> delete(@PathVariable("name") String name, @RequestParam("driveEmail") String driveEmail){
+    public ResponseEntity<Void> delete(@PathVariable("name") String name){
         try {
             imageService.delete(name);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok().build();
-    }
-    @PostMapping("{name}")
-    public ResponseEntity<Void> addEmail(@PathVariable("name") String name){
-
-        return ResponseEntity.ok().build();
-    }
-    @DeleteMapping("{name}")
-    public ResponseEntity<Void> deleteEmail(@PathVariable("name") String name){
         return ResponseEntity.ok().build();
     }
 

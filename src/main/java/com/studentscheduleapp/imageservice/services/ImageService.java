@@ -1,5 +1,6 @@
 package com.studentscheduleapp.imageservice.services;
 
+import com.studentscheduleapp.imageservice.repos.GoogleDriveRepo;
 import com.studentscheduleapp.imageservice.repos.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,15 +19,19 @@ public class ImageService {
 
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private GoogleDriveRepo googleDriveRepo;
 
     public File get(String name) throws IOException {
-        return imageRepository.get(name);
+        return googleDriveRepo.get(name);
     }
 
     public String create(MultipartFile file) throws IOException {
-        return path + "/" + imageRepository.create(file);
+        File f = new File("src/main/resources/targetFile.tmp");
+        file.transferTo(f);
+        return path + "/" + googleDriveRepo.create(f);
     }
     public void delete(String name) throws IOException {
-        imageRepository.delete(name);
+        googleDriveRepo.delete(name);
     }
 }
