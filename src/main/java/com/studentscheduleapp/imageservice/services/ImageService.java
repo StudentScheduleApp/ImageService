@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 @Service
 public class ImageService {
@@ -28,7 +27,8 @@ public class ImageService {
 
     public String create(MultipartFile file) throws IOException {
         File f = new File("src/main/resources/targetFile.tmp");
-        file.transferTo(f);
+        FileOutputStream outputStream = new FileOutputStream(f);
+        outputStream.write(file.getBytes());
         return path + "/" + googleDriveRepo.create(f);
     }
     public void delete(String name) throws IOException {

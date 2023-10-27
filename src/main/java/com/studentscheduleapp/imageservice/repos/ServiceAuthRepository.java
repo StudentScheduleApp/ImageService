@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
-public class ServiceTokenRepository  {
+public class ServiceAuthRepository {
 
     @Value("${ip.identityservice}")
     private String identityService;

@@ -17,6 +17,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 /* class to demonstrate use of Drive files list API */
+@Repository
 public class GoogleDriveRepo {
     private static final String APPLICATION_NAME = "StudentScheduleApp";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
@@ -72,21 +74,19 @@ public class GoogleDriveRepo {
         }
     }
     public String create(java.io.File fileContent) throws IOException {
-            com.google.api.services.drive.model.File file = new com.google.api.services.drive.model.File();
-            file.setName("img");
-
-            file.setParents(Collections.EMPTY_LIST);
-
-            FileContent mediaContent = new FileContent("image/jpeg", fileContent);
-            try {
-                final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-                Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                        .setApplicationName(APPLICATION_NAME)
-                        .build();
-                return service.files().create(file, mediaContent).setFields("id").execute().getId();
-            } catch (GeneralSecurityException e){
-                throw new IOException();
-            }
+        com.google.api.services.drive.model.File file = new com.google.api.services.drive.model.File();
+        file.setName("img");
+        file.setParents(Collections.EMPTY_LIST);
+        FileContent mediaContent = new FileContent("image/jpeg", fileContent);
+        try {
+            final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                    .setApplicationName(APPLICATION_NAME)
+                    .build();
+            return service.files().create(file, mediaContent).setFields("id").execute().getId();
+        } catch (GeneralSecurityException e){
+            throw new IOException();
+        }
     }
     public boolean delete(String name) throws IOException {
         try {
