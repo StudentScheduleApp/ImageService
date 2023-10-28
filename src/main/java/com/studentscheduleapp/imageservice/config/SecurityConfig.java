@@ -4,6 +4,7 @@ import com.studentscheduleapp.imageservice.security.ServiceTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,6 +29,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
+                                .antMatchers(HttpMethod.GET, "/api/{id}").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .addFilterAfter(serviceTokenFilter, BasicAuthenticationFilter.class)
