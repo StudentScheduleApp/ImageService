@@ -28,7 +28,7 @@ import java.util.List;
 
 /* class to demonstrate use of Drive files list API */
 @Repository
-public class GoogleDriveRepo {
+public class GoogleDriveRepo implements StorageRepo {
     private static final String APPLICATION_NAME = "StudentScheduleApp";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     @Value("${google.drive.token.path}")
@@ -56,6 +56,7 @@ public class GoogleDriveRepo {
         return credential;
     }
 
+    @Override
     public java.io.File get(String name) throws IOException {
         try {
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -73,11 +74,15 @@ public class GoogleDriveRepo {
             throw new IOException();
         }
     }
-    public String create(java.io.File fileContent) throws IOException {
+    @Override
+    public String create(MultipartFile fileContent) throws IOException {
+        java.io.File f = new java.io.File("src/main/resources/targetFile.tmp");
+        FileOutputStream outputStream = new FileOutputStream(f);
+        outputStream.write(fileContent.getBytes());
         com.google.api.services.drive.model.File file = new com.google.api.services.drive.model.File();
         file.setName("img");
         file.setParents(Collections.EMPTY_LIST);
-        FileContent mediaContent = new FileContent("image/jpeg", fileContent);
+        FileContent mediaContent = new FileContent("image/jpeg", f);
         try {
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
@@ -88,6 +93,7 @@ public class GoogleDriveRepo {
             throw new IOException();
         }
     }
+    @Override
     public boolean delete(String name) throws IOException {
         try {
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();

@@ -26,10 +26,7 @@ public class ImageService {
     }
 
     public String create(MultipartFile file) throws IOException {
-        File f = new File("src/main/resources/targetFile.tmp");
-        FileOutputStream outputStream = new FileOutputStream(f);
-        outputStream.write(file.getBytes());
-        return path + "/" + googleDriveRepo.create(f);
+        return path + "/" + googleDriveRepo.create(file);
     }
     public void delete(String name) throws IOException {
         googleDriveRepo.delete(name);

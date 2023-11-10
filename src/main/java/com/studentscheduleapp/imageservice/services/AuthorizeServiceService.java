@@ -1,16 +1,15 @@
 package com.studentscheduleapp.imageservice.services;
 
-import com.studentscheduleapp.imageservice.repos.ServiceAuthRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthorizeServiceService {
-    @Autowired
-    private ServiceAuthRepository serviceAuthRepository;
+    @Value("${service.token}")
+    private String serviceToken;
 
-    public boolean authorize(String token) throws Exception {
-        return serviceAuthRepository.existsByServiceToken(token);
+    public boolean authorize(String token){
+        return serviceToken.equals(token);
     }
 
 }

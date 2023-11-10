@@ -8,13 +8,14 @@ import javax.imageio.ImageIO;
 import java.io.*;
 
 @Repository
-public class ImageRepository {
+public class ImageRepository implements StorageRepo {
 
 
 
     @Value("${file.root}")
     private String root;
 
+    @Override
     public File get(String name) throws IOException {
         File f = new File(root + "/" + name);
         if (!f.exists())
@@ -22,6 +23,7 @@ public class ImageRepository {
         return f;
     }
 
+    @Override
     public String create(MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty() && ImageIO.read(file.getInputStream()) != null) {
             try {
@@ -52,10 +54,14 @@ public class ImageRepository {
             throw new NullPointerException();
         }
     }
-    public void delete(String name) throws IOException {
+    @Override
+    public boolean delete(String name) throws IOException {
         File f = new File(root + "/" + name);
-        if (f.exists())
+        if (f.exists()) {
             f.delete();
+            return true;
+        }
+        return false;
     }
 
 
