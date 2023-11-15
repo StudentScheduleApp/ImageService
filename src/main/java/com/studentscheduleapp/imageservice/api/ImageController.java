@@ -37,32 +37,22 @@ public class ImageController {
 
     @GetMapping("{name}")
     public ResponseEntity<Byte[]> download(@PathVariable("name") String name){
-        File f = null;
+        Byte[] f = null;
         try {
             f = imageService.get(name);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        if(f != null){
-            try {
-                byte[] bs = FileUtils.readFileToByteArray(f);
-                Byte[] Bs = new Byte[bs.length];
-                for (int i = 0; i < bs.length; i++){
-                    Bs[i] = bs[i];
-                }
-                return ResponseEntity.ok(Bs);
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (f == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(f);
     }
 
     @DeleteMapping("{name}")
     public ResponseEntity<Void> delete(@PathVariable("name") String name){
         try {
             imageService.delete(name);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok().build();

@@ -1,10 +1,12 @@
 package com.studentscheduleapp.imageservice.services;
 
 import com.studentscheduleapp.imageservice.repos.DriveRepo;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import sun.reflect.misc.FieldUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -20,11 +22,11 @@ public class ImageService {
     @Autowired
     private DriveRepo driveRepo;
 
-    public File get(String name) throws IOException {
+    public Byte[] get(String name) throws Exception {
         return driveRepo.get(name.substring(0, name.length() - 4));
     }
 
-    public String create(MultipartFile file) throws IOException {
+    public String create(MultipartFile file) throws Exception {
         File f = new File("mpf_to_f");
         FileOutputStream outputStream = new FileOutputStream(f);
         outputStream.write(file.getBytes());
@@ -44,9 +46,14 @@ public class ImageService {
             f.delete();
         if (out.exists())
             out.delete();
-        return path + "/" + driveRepo.create(out) + ".jpg";
+        byte[] bs = FileUtils.readFileToByteArray(f);
+        Byte[] Bs = new Byte[bs.length];
+        for (int i = 0; i < bs.length; i++){
+            Bs[i] = bs[i];
+        }
+        return path + "/" + driveRepo.create(Bs) + ".jpg";
     }
-    public void delete(String name) throws IOException {
-        driveRepo.delete(name);
+    public void delete(String name) throws Exception {
+        driveRepo.delete(name.substring(0, name.length() - 4));
     }
 }
