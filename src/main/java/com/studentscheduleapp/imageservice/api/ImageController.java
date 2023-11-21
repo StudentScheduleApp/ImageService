@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("api/")
@@ -22,16 +23,21 @@ public class ImageController {
 
     @PostMapping("upload")
     public ResponseEntity<String> upload(@RequestParam("image") MultipartFile file) {
-        if (file == null)
+        if (file == null) {
+            Logger.getGlobal().info("bad request: image is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         String url = "";
         try {
             url = imageService.create(file);
         } catch (NullPointerException e){
+            Logger.getGlobal().info("bad request: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
+            Logger.getGlobal().info("ERROR: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+        Logger.getGlobal().info("image " + url + " saved successful");
         return ResponseEntity.ok(url);
     }
 
@@ -41,10 +47,14 @@ public class ImageController {
         try {
             f = imageService.get(name);
         } catch (Exception e) {
+            Logger.getGlobal().info("ERROR: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        if (f == null)
+        if (f == null) {
+            Logger.getGlobal().info("not found: image " + name + " not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        Logger.getGlobal().info("image " + name + " send successful");
         return ResponseEntity.ok(f);
     }
 
@@ -53,8 +63,10 @@ public class ImageController {
         try {
             imageService.delete(name);
         } catch (Exception e) {
+            Logger.getGlobal().info("ERROR: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+        Logger.getGlobal().info("image " + name + " deleted successful");
         return ResponseEntity.ok().build();
     }
 

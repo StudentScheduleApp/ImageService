@@ -23,7 +23,7 @@ public class ImageService {
     private DriveRepo driveRepo;
 
     public Byte[] get(String name) throws Exception {
-        return driveRepo.get(name.substring(0, name.length() - 4));
+        return driveRepo.get(name);
     }
 
     public String create(MultipartFile file) throws Exception {
