@@ -34,7 +34,7 @@ public class ImageController {
             Logger.getGlobal().info("bad request: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
-            Logger.getGlobal().info("ERROR: " + e.getMessage());
+            Logger.getGlobal().info("upload failed:" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         Logger.getGlobal().info("image " + url + " saved successful");
@@ -47,7 +47,7 @@ public class ImageController {
         try {
             f = imageService.get(name);
         } catch (Exception e) {
-            Logger.getGlobal().info("ERROR: " + e.getMessage());
+            Logger.getGlobal().info("download failed:" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         if (f == null) {
@@ -63,7 +63,7 @@ public class ImageController {
         try {
             imageService.delete(name);
         } catch (Exception e) {
-            Logger.getGlobal().info("ERROR: " + e.getMessage());
+            Logger.getGlobal().info("delete failed:" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         Logger.getGlobal().info("image " + name + " deleted successful");
