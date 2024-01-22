@@ -1,5 +1,6 @@
 package com.studentscheduleapp.imageservice.repos;
 
+import com.studentscheduleapp.imageservice.properties.services.DriveServiceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -15,31 +16,23 @@ import java.io.IOException;
 @Repository
 public class DriveRepo {
 
-    @Value("${ip.driveservice}")
-    private String driveService;
+    @Autowired
+    private DriveServiceProperties driveServiceProperties;
 
     @Autowired
     private RestTemplate restTemplate;
 
-    public Byte[] get(String name) throws Exception {
-        ResponseEntity<Byte[]> r = restTemplate.getForEntity(driveService + "/api/download/" + name, Byte[].class);
-        if(r.getStatusCode().is2xxSuccessful())
-            return r.getBody();
-        if(r.getStatusCode().equals(HttpStatus.NOT_FOUND))
-            return null;
-        throw new Exception("request to " + driveService + " return code " + r.getStatusCode());
-    }
     public String create(Byte[] file) throws Exception {
-        ResponseEntity<String> r = restTemplate.postForEntity(driveService + "/api/upload", file, String.class);
+        ResponseEntity<String> r = restTemplate.postForEntity(driveServiceProperties.getUri() + driveServiceProperties.getUploadPath(), file, String.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
-        throw new Exception("request to " + driveService + " return code " + r.getStatusCode());
+        throw new Exception("request to " + driveServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
     public boolean delete(String name) throws Exception {
-        ResponseEntity<Void> r = restTemplate.exchange(driveService + "/api/" + name, HttpMethod.DELETE, null, Void.class);
+        ResponseEntity<Void> r = restTemplate.exchange(driveServiceProperties.getUri() + driveServiceProperties.getDeletePath() + name, HttpMethod.DELETE, null, Void.class);
         if(r.getStatusCode().is2xxSuccessful())
             return true;
-        throw new Exception("request to " + driveService + " return code " + r.getStatusCode());
+        throw new Exception("request to " + driveServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 
 }

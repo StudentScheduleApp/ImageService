@@ -1,5 +1,7 @@
 package com.studentscheduleapp.imageservice.http;
 
+import com.studentscheduleapp.imageservice.properties.GlobalProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -11,13 +13,12 @@ import java.io.IOException;
 public class HeaderRequestInterceptor implements ClientHttpRequestInterceptor {
 
 
-    @Value("${service.token}")
-    private String serviceTokenValue;
+    @Autowired
+    private GlobalProperties globalProperties;
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        String headerName = "Service-Token";
-        request.getHeaders().set(headerName, serviceTokenValue);
+        request.getHeaders().set(globalProperties.getServiceTokenHeader(), globalProperties.getServiceToken());
         return execution.execute(request, body);
     }
 

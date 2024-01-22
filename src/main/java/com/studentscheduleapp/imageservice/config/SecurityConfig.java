@@ -29,7 +29,6 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .antMatchers(HttpMethod.GET, "/api/{id}").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .addFilterAfter(serviceTokenFilter, BasicAuthenticationFilter.class)

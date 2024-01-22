@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import sun.reflect.misc.FieldUtil;
+
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,15 +16,8 @@ import java.io.*;
 @Service
 public class ImageService {
 
-
-    @Value("${file.path}")
-    private String path;
     @Autowired
     private DriveRepo driveRepo;
-
-    public Byte[] get(String name) throws Exception {
-        return driveRepo.get(name.substring(0, name.length() - 4));
-    }
 
     public String create(MultipartFile file) throws Exception {
         File f = new File("mpf_to_f");
@@ -51,9 +44,9 @@ public class ImageService {
         for (int i = 0; i < bs.length; i++){
             Bs[i] = bs[i];
         }
-        return path + "/" + driveRepo.create(Bs) + ".jpg";
+        return driveRepo.create(Bs);
     }
     public void delete(String name) throws Exception {
-        driveRepo.delete(name.substring(0, name.length() - 4));
+        driveRepo.delete(name);
     }
 }
