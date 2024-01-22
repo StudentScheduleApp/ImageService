@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StreamCorruptedException;
 import java.util.logging.Logger;
 
 @RestController
@@ -22,14 +23,14 @@ public class ImageController {
 
     @PostMapping("${mapping.upload}")
     public ResponseEntity<String> upload(@RequestParam("image") MultipartFile file) {
-        if (file == null) {
+        if (file == null || file.isEmpty()) {
             Logger.getGlobal().info("bad request: image is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         String url = "";
         try {
             url = imageService.create(file);
-        } catch (NullPointerException e){
+        } catch (NullPointerException | StreamCorruptedException e){
             Logger.getGlobal().info("bad request: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {

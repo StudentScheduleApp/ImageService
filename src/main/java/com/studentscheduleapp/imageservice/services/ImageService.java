@@ -33,7 +33,11 @@ public class ImageService {
 
         File out = new File("f_to_jpg");
         final FileOutputStream fileOutputStream = new FileOutputStream(out);
-        ImageIO.write(convertedImage, "jpg", fileOutputStream);
+        try {
+            ImageIO.write(convertedImage, "jpg", fileOutputStream);
+        } catch (Exception e) {
+            throw new StreamCorruptedException("error cast file to jpg");
+        }
         fileOutputStream.close();
         if (f.exists())
             f.delete();
