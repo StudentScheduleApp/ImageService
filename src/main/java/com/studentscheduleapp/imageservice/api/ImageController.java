@@ -41,7 +41,7 @@ public class ImageController {
         return ResponseEntity.ok(url);
     }
 
-    @DeleteMapping("${mapping.upload}/{name}")
+    @DeleteMapping("${mapping.delete}/{name}")
     public ResponseEntity<Void> delete(@PathVariable("name") String name){
         try {
             imageService.delete(name);
