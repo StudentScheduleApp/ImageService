@@ -11,5 +11,7 @@ public class GlobalProperties {
     private String serviceToken;
     @Value("${global.serviceTokenHeader}")
     private String serviceTokenHeader;
+    @Value("${global.maximagesize}")
+    private long maxImageSize;
 
 }

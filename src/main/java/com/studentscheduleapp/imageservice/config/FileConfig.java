@@ -1,5 +1,7 @@
 package com.studentscheduleapp.imageservice.config;
 
+import com.studentscheduleapp.imageservice.properties.GlobalProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,11 +12,14 @@ import javax.servlet.MultipartConfigElement;
 @Configuration
 public class FileConfig {
 
+    @Autowired
+    private GlobalProperties globalProperties;
+
     @Bean
     MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize(DataSize.ofBytes(1024*1024*5));
-        factory.setMaxRequestSize(DataSize.ofBytes(1024*1024*20));
+        factory.setMaxFileSize(DataSize.ofBytes(globalProperties.getMaxImageSize()));
+        factory.setMaxRequestSize(DataSize.ofBytes(globalProperties.getMaxImageSize()));
         return factory.createMultipartConfig();
     }
 
