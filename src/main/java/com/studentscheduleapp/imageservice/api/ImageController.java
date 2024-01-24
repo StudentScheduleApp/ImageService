@@ -30,6 +30,8 @@ public class ImageController {
         String url = "";
         try {
             url = imageService.create(file);
+            if (url == null)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (NullPointerException | StreamCorruptedException e){
             Logger.getGlobal().info("bad request: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

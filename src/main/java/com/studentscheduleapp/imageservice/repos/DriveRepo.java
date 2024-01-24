@@ -2,16 +2,11 @@ package com.studentscheduleapp.imageservice.repos;
 
 import com.studentscheduleapp.imageservice.properties.services.DriveServiceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
 
 @Repository
 public class DriveRepo {
@@ -22,7 +17,7 @@ public class DriveRepo {
     @Autowired
     private RestTemplate restTemplate;
 
-    public String create(Byte[] file) throws Exception {
+    public String create(MultipartFile file) throws Exception {
         ResponseEntity<String> r = restTemplate.postForEntity(driveServiceProperties.getUri() + driveServiceProperties.getUploadPath(), file, String.class);
         if(r.getStatusCode().is2xxSuccessful())
             return r.getBody();
