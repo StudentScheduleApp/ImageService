@@ -44,6 +44,7 @@ public class ServiceTokenFilter extends GenericFilterBean {
             else
                 Logger.getGlobal().info("authorize service failed: invalid token " + token);
         } catch (Exception e) {
+            e.printStackTrace();
             Logger.getGlobal().info("authorize service failed: " + e.getMessage());
         }
         fc.doFilter(request, response);

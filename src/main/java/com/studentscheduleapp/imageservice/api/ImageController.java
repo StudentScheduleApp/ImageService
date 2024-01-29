@@ -33,9 +33,11 @@ public class ImageController {
             if (url == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (NullPointerException | StreamCorruptedException e){
+            e.printStackTrace();
             Logger.getGlobal().info("bad request: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
+            e.printStackTrace();
             Logger.getGlobal().info("upload failed: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -48,6 +50,7 @@ public class ImageController {
         try {
             imageService.delete(name);
         } catch (Exception e) {
+            e.printStackTrace();
             Logger.getGlobal().info("delete failed: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
