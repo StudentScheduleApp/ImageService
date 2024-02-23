@@ -5,6 +5,8 @@ import com.studentscheduleapp.imageservice.properties.GlobalProperties;
 import com.studentscheduleapp.imageservice.services.AuthorizeServiceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,7 +19,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.logging.Logger;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 @Slf4j
 @Component
@@ -29,6 +32,7 @@ public class ServiceTokenFilter extends GenericFilterBean {
     private GlobalProperties globalProperties;
     @Autowired
     private AuthorizeServiceService authorizeServiceService;
+    private static final Logger logger = LogManager.getLogger(ServiceTokenFilter.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc) throws IOException, ServletException {
@@ -39,13 +43,14 @@ public class ServiceTokenFilter extends GenericFilterBean {
                 appInfoToken.setAuthenticated(true);
                 appInfoToken.setServiceName("service");
                 SecurityContextHolder.getContext().setAuthentication(appInfoToken);
-                Logger.getGlobal().info("authorize service success");
             }
             else
-                Logger.getGlobal().info("authorize service failed: invalid token " + token);
+                logger.warn("authorize service failed: invalid token " + token);
         } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getGlobal().info("authorize service failed: " + e.getMessage());
+            e.getStackTrace();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            logger.error("authorize service failed: " + errors);
         }
         fc.doFilter(request, response);
     }

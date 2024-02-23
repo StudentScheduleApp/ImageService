@@ -2,6 +2,8 @@ package com.studentscheduleapp.imageservice.api;
 
 import com.studentscheduleapp.imageservice.services.ImageService;
 import lombok.RequiredArgsConstructor;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StreamCorruptedException;
-import java.util.logging.Logger;
+import java.io.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,11 +19,12 @@ public class ImageController {
 
     @Autowired
     private ImageService imageService;
+    private static final Logger log = LogManager.getLogger(ImageController.class);
 
     @PostMapping("${mapping.upload}")
     public ResponseEntity<String> upload(@RequestParam("image") MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            Logger.getGlobal().info("bad request: image is null or empty");
+            log.warn("bad request: image is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         String url = "";
@@ -33,15 +33,19 @@ public class ImageController {
             if (url == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (NullPointerException | StreamCorruptedException e){
-            e.printStackTrace();
-            Logger.getGlobal().info("bad request: " + e.getMessage());
+            e.getStackTrace();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            log.warn("bad request: " + errors);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getGlobal().info("upload failed: " + e.getMessage());
+            e.getStackTrace();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            log.error("upload failed: " + errors);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        Logger.getGlobal().info("image " + url + " saved successful");
+        log.info("image " + url + " saved");
         return ResponseEntity.ok(url);
     }
 
@@ -50,11 +54,13 @@ public class ImageController {
         try {
             imageService.delete(name);
         } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getGlobal().info("delete failed: " + e.getMessage());
+            e.getStackTrace();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            log.error("delete failed: " + errors);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        Logger.getGlobal().info("image " + name + " deleted successful");
+        log.info("image " + name + " deleted");
         return ResponseEntity.ok().build();
     }
 
