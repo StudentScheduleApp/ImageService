@@ -2,7 +2,6 @@ package com.studentscheduleapp.imageservice.http;
 
 import com.studentscheduleapp.imageservice.properties.GlobalProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;

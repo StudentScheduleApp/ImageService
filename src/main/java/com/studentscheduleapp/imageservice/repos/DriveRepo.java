@@ -31,11 +31,10 @@ public class DriveRepo {
             return r.getBody();
         throw new Exception("request to " + driveServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
-    public boolean delete(String name) throws Exception {
+    public void delete(String name) throws Exception {
         ResponseEntity<Void> r = restTemplate.exchange(driveServiceProperties.getUri() + driveServiceProperties.getDeletePath() + "/" + name, HttpMethod.DELETE, null, Void.class);
-        if(r.getStatusCode().is2xxSuccessful())
-            return true;
-        throw new Exception("request to " + driveServiceProperties.getUri() + " return code " + r.getStatusCode());
+        if(!r.getStatusCode().is2xxSuccessful())
+            throw new Exception("request to " + driveServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 
 }

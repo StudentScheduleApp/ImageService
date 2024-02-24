@@ -4,14 +4,15 @@ import com.studentscheduleapp.imageservice.services.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.PrintWriter;
+import java.io.StreamCorruptedException;
+import java.io.StringWriter;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,19 +28,17 @@ public class ImageController {
             log.warn("bad request: image is null or empty");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        String url = "";
+        String url;
         try {
             url = imageService.create(file);
             if (url == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (NullPointerException | StreamCorruptedException e){
-            e.getStackTrace();
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
             log.warn("bad request: " + errors);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
-            e.getStackTrace();
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
             log.error("upload failed: " + errors);
@@ -54,7 +53,6 @@ public class ImageController {
         try {
             imageService.delete(name);
         } catch (Exception e) {
-            e.getStackTrace();
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
             log.error("delete failed: " + errors);
