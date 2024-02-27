@@ -27,13 +27,14 @@ public class DriveRepo {
         body.add("file", multipartFile);
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, null);
         ResponseEntity<String> r = restTemplate.postForEntity(driveServiceProperties.getUri() + driveServiceProperties.getUploadPath(), requestEntity, String.class);
-        if(r.getStatusCode().is2xxSuccessful())
+        if (r.getStatusCode().is2xxSuccessful())
             return r.getBody();
         throw new Exception("request to " + driveServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
+
     public void delete(String name) throws Exception {
         ResponseEntity<Void> r = restTemplate.exchange(driveServiceProperties.getUri() + driveServiceProperties.getDeletePath() + "/" + name, HttpMethod.DELETE, null, Void.class);
-        if(!r.getStatusCode().is2xxSuccessful())
+        if (!r.getStatusCode().is2xxSuccessful())
             throw new Exception("request to " + driveServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 

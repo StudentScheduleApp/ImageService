@@ -18,9 +18,9 @@ import java.io.StringWriter;
 @RequiredArgsConstructor
 public class ImageController {
 
+    private static final Logger log = LogManager.getLogger(ImageController.class);
     @Autowired
     private ImageService imageService;
-    private static final Logger log = LogManager.getLogger(ImageController.class);
 
     @PostMapping("${mapping.upload}")
     public ResponseEntity<String> upload(@RequestParam("image") MultipartFile file) {
@@ -33,7 +33,7 @@ public class ImageController {
             url = imageService.create(file);
             if (url == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } catch (NullPointerException | StreamCorruptedException e){
+        } catch (NullPointerException | StreamCorruptedException e) {
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
             log.warn("bad request: " + errors);
@@ -49,7 +49,7 @@ public class ImageController {
     }
 
     @DeleteMapping("${mapping.delete}/{name}")
-    public ResponseEntity<Void> delete(@PathVariable("name") String name){
+    public ResponseEntity<Void> delete(@PathVariable("name") String name) {
         try {
             imageService.delete(name);
         } catch (Exception e) {

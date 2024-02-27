@@ -16,19 +16,29 @@ public class ServiceAuthentication implements Authentication {
     private String serviceName;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() { return null; }
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
 
     @Override
-    public Object getCredentials() { return null; }
+    public Object getCredentials() {
+        return null;
+    }
 
     @Override
-    public Object getDetails() { return null; }
+    public Object getDetails() {
+        return null;
+    }
 
     @Override
-    public Object getPrincipal() { return serviceName; }
+    public Object getPrincipal() {
+        return serviceName;
+    }
 
     @Override
-    public boolean isAuthenticated() { return authenticated; }
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
@@ -36,6 +46,8 @@ public class ServiceAuthentication implements Authentication {
     }
 
     @Override
-    public String getName() { return serviceName; }
+    public String getName() {
+        return serviceName;
+    }
 
 }

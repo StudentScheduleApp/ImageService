@@ -28,11 +28,11 @@ import java.io.StringWriter;
 public class ServiceTokenFilter extends GenericFilterBean {
 
 
+    private static final Logger logger = LogManager.getLogger(ServiceTokenFilter.class);
     @Autowired
     private GlobalProperties globalProperties;
     @Autowired
     private AuthorizeServiceService authorizeServiceService;
-    private static final Logger logger = LogManager.getLogger(ServiceTokenFilter.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc) throws IOException, ServletException {
@@ -43,8 +43,7 @@ public class ServiceTokenFilter extends GenericFilterBean {
                 appInfoToken.setAuthenticated(true);
                 appInfoToken.setServiceName("service");
                 SecurityContextHolder.getContext().setAuthentication(appInfoToken);
-            }
-            else
+            } else
                 logger.warn("authorize service failed: invalid token " + token);
         } catch (Exception e) {
             StringWriter errors = new StringWriter();

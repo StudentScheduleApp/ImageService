@@ -12,7 +12,7 @@ public class ServiceConfig {
 
 
     @Bean
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setInterceptors(Collections.singletonList(headerRequestInterceptor()));
         return restTemplate;
