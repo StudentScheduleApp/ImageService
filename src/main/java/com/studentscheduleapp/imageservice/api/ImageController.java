@@ -31,8 +31,10 @@ public class ImageController {
         String url;
         try {
             url = imageService.create(file);
-            if (url == null)
+            if (url == null) {
+                log.error("upload failed: bad file");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
         } catch (NullPointerException | StreamCorruptedException e) {
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
