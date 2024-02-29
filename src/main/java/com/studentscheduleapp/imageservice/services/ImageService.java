@@ -12,7 +12,7 @@ public class ImageService {
     private DriveRepo driveRepo;
 
     public String create(MultipartFile file) throws Exception {
-        if (file.getContentType() != null && !file.getContentType().split("/")[0].equals("image"))
+        if (file.getContentType() != null && !file.getContentType().split("/")[0].equals("image") || file.getContentType() == null)
             return null;
         return driveRepo.create(file);
     }
