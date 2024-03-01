@@ -5,12 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Collection;
+import java.util.Collections;
 
 @Repository
 public class DriveRepo {
@@ -32,8 +36,8 @@ public class DriveRepo {
         throw new Exception("request to " + driveServiceProperties.getUri() + " return code " + r.getStatusCode());
     }
 
-    public void delete(String name) throws Exception {
-        ResponseEntity<Void> r = restTemplate.exchange(driveServiceProperties.getUri() + driveServiceProperties.getDeletePath() + "/" + name, HttpMethod.DELETE, null, Void.class);
+    public void delete(String url) throws Exception {
+        ResponseEntity<Void> r = restTemplate.exchange(driveServiceProperties.getUri() + driveServiceProperties.getDeletePath() + "?downloadUrl={url}", HttpMethod.DELETE, null, Void.class, url);
         if (!r.getStatusCode().is2xxSuccessful())
             throw new Exception("request to " + driveServiceProperties.getUri() + " return code " + r.getStatusCode());
     }

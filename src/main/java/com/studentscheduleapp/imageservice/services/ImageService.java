@@ -17,7 +17,7 @@ public class ImageService {
         return driveRepo.create(file);
     }
 
-    public void delete(String name) throws Exception {
-        driveRepo.delete(name);
+    public void delete(String url) throws Exception {
+        driveRepo.delete(url);
     }
 }

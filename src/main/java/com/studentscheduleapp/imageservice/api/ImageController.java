@@ -1,6 +1,7 @@
 package com.studentscheduleapp.imageservice.api;
 
 import com.studentscheduleapp.imageservice.services.ImageService;
+import com.studentscheduleapp.imageservice.services.UrlService;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -21,6 +22,8 @@ public class ImageController {
     private static final Logger log = LogManager.getLogger(ImageController.class);
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private UrlService urlService;
 
     @PostMapping("${mapping.upload}")
     public ResponseEntity<String> upload(@RequestParam("image") MultipartFile file) {
@@ -32,13 +35,13 @@ public class ImageController {
         try {
             url = imageService.create(file);
             if (url == null) {
-                log.error("upload failed: bad file");
+                log.warn("upload failed: bad file");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
         } catch (NullPointerException | StreamCorruptedException e) {
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
-            log.warn("bad request: " + errors);
+            log.warn("bad request: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
             StringWriter errors = new StringWriter();
@@ -50,17 +53,21 @@ public class ImageController {
         return ResponseEntity.ok(url);
     }
 
-    @DeleteMapping("${mapping.delete}/{name}")
-    public ResponseEntity<Void> delete(@PathVariable("name") String name) {
+    @DeleteMapping("${mapping.delete}")
+    public ResponseEntity<Void> delete(@RequestParam("downloadUrl") String url) {
         try {
-            imageService.delete(name);
+            imageService.delete(url);
         } catch (Exception e) {
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
-            log.error("delete failed: " + errors);
+            if (e.getMessage().contains("404")) {
+                log.warn("delete failed: image + " + url + " not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            log.warn("delete failed: " + errors);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        log.info("image " + name + " deleted");
+        log.info("image " + url + " deleted");
         return ResponseEntity.ok().build();
     }
 
