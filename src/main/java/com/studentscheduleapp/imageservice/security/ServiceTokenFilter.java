@@ -54,7 +54,7 @@ public class ServiceTokenFilter extends GenericFilterBean {
         try {
             fc.doFilter(request, response);
         } catch (Exception e) {
-            logger.error("request failed: " + e.getMessage());
+            logger.warn("request failed: " + e.getMessage());
             ((HttpServletResponse) response).setStatus(400);
         }
     }
